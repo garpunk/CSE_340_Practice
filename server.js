@@ -17,6 +17,8 @@ const __dirname = path.dirname(__filename);
 
 const name = process.env.NAME; // can probably remove but let QA take care of it (I'm joking bro keers)
 
+let demoVisitCount = 0;
+
 // Course data - place this after imports, before routes
 const courses = {
     'CS121': {
@@ -52,6 +54,29 @@ const courses = {
             { time: '4:00 PM', room: 'GEB 203', professor: 'Sister Enkey' }
         ]
     }
+};
+
+// Route-specific middleware that sets custom headers
+const addDemoHeaders = (req, res, next) => {
+    // Your task: Set custom headers using res.setHeader()
+    // Add a header called 'X-Demo-Page' with value 'true'
+    // Add a header called 'X-Middleware-Demo' with any message you want
+     res.setHeader('X-Demo-Page', 'true')
+     res.setHeader('X-Middleware-Demo', 'Hello!')
+    next();
+};
+
+const countDemoVisits = (req, res, next) => {
+    // TODO:
+    // 1. Increment the counter
+    // 2. Log something meaningful to the console
+    //    (include the current count so you can see it change)
+   
+    demoVisitCount++;
+
+    console.log(`times visited demo: ${demoVisitCount}`)
+    next();
+    
 };
 
 // Serve static files from the public directory
@@ -119,6 +144,20 @@ app.use((req, res, next) => {
     res.locals.queryParams = req.query || {};
 
     next();
+});
+
+// Global middleware to fix bug with NODE_ENV in part 6 (AI-ASSISTED FIX)
+app.use((req, res, next) => {
+    res.locals.NODE_ENV = process.env.NODE_ENV || 'development';
+    next();
+});
+
+
+// Demo page route with header middleware
+app.get('/demo', addDemoHeaders, countDemoVisits, (req, res) => {
+    res.render('demo', {
+        title: 'Middleware Demo Page'
+    });
 });
 
 // Set EJS as the templating engine
