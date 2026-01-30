@@ -1,5 +1,5 @@
 {
-    "name": "cse340-practice-[helms]",
+    "name": "CSE_340_PRACTICE",
     "dependencies": {
         "ejs": "^4.0.1",
         "express": "^5.2.1"
