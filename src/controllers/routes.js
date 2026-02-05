@@ -8,8 +8,16 @@ import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
 // Create a new router instance
 const router = Router();
 
-// TODO: Add import statements for controllers and middleware
-// TODO: Add route definitions
+// Section-specific asset middleware
+router.use('/catalog', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/catalog.css">');
+    next();
+});
+
+router.use('/faculty', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/faculty.css">');
+    next();
+});
 
 // Home and basic pages
 router.get('/', homePage);
@@ -17,11 +25,11 @@ router.get('/about', aboutPage);
 
 // Course catalog routes
 router.get('/catalog', catalogPage);
-router.get('/catalog/:courseId', courseDetailPage);
+router.get('/catalog/:slugId', courseDetailPage);
 
 // Faculty list/detail routes
 router.get('/faculty', facultyListPage);
-router.get('/faculty/:facultyId', facultyDetailPage);
+router.get('/faculty/:facultySlug', facultyDetailPage);
 
 
 // Demo page with special middleware
