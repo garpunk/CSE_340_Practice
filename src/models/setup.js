@@ -29,8 +29,18 @@ const setupDatabase = async () => {
         hasData = false;
     }
     
+    const runPracticeSQL = async () => {
+        const practicePath = join(__dirname, 'sql', 'practice.sql');
+        if (fs.existsSync(practicePath)) {
+            const practiceSQL = fs.readFileSync(practicePath, 'utf8');
+            await db.query(practiceSQL);
+            console.log('Practice database tables initialized');
+        }
+    };
+
     if (hasData) {
         console.log('Database already seeded');
+        await runPracticeSQL();
         return true;
     }
     
@@ -39,6 +49,8 @@ const setupDatabase = async () => {
     const seedPath = join(__dirname, 'sql', 'seed.sql');
     const seedSQL = fs.readFileSync(seedPath, 'utf8');
     await db.query(seedSQL);
+    // Run practice.sql if it exists (for student assignments)
+    await runPracticeSQL();
     console.log('Database seeded successfully');
     
     return true;
